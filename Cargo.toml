@@ -1,0 +1,39 @@
+[package]
+name         = "2048"
+version      = "0.0.1"
+include      = ["src/**/*", "Cargo.toml"]
+publish      = false
+license      = "MIT"
+travis-ci    = { repository = "github.com/nordsieck/2048", branch = "master" }
+
+[profile.dev]
+opt-level        = 0
+debug            = true
+rpath            = false
+lto              = false
+debug-assertions = true
+codegen-units    = 4
+panic            = 'unwind'
+
+[profile.release]
+opt-level        = 3
+debug            = false
+rpath            = false
+lto              = false
+debug-assertions = false
+codegen-units    = 4
+panic            = 'unwind'
+
+[profile.test]
+opt-level        = 0
+debug            = 2
+rpath            = false
+lto              = false
+debug-assertions = true
+codegen-units    = 4
+panic            = 'unwind'
+
+[lib]
+name = "board"
+path = "src/board.rs"
+test = true
