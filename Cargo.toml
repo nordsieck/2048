@@ -4,7 +4,6 @@ version      = "0.0.1"
 include      = ["src/**/*", "Cargo.toml"]
 publish      = false
 license      = "MIT"
-travis-ci    = { repository = "github.com/nordsieck/2048", branch = "master" }
 
 [profile.dev]
 opt-level        = 0
