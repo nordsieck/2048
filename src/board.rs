@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 enum Direction { Up, Down, Left, Right }
 
-#[derive(Debug)]
+#[derive(Debug, Eq)]
 struct State { board: [[u32; 4]; 4], score: u32 }
 
 impl PartialEq for State {
