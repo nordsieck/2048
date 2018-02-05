@@ -20,13 +20,13 @@ impl fmt::Display for State {
 }
 
 fn clone_state(b: &State) -> State {
-    let mut dst = new_board();
+    let mut dst = new_state();
     dst.board.copy_from_slice(&b.board);
     dst.score = b.score;
     dst
 }
 
-fn new_board() -> State { return State{ board: [[0; 4]; 4], score: 0 }}
+fn new_state() -> State { return State{ board: [[0; 4]; 4], score: 0 }}
 
 fn add_piece(b: &State, get_pos: &Fn(&State) -> Option<(usize, usize)>, get_val: &Fn() -> u32) -> Option<State> {
     match get_pos(b) {
@@ -159,8 +159,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_new_board() {
-        let b = new_board();
+    fn test_new_state() {
+        let b = new_state();
         assert_eq!(b, State{ board:[[0; 4]; 4], score: 0 })
     }
 
@@ -168,14 +168,14 @@ mod tests {
     fn test_low_pos() {
         fn t(b: State, r: Option<(usize, usize)>) { assert_eq!(low_pos(&b), r); }
 
-        t(new_board(), Some((0, 0)));
+        t(new_state(), Some((0, 0)));
         t(State{board:[[1; 4], [1; 4], [1; 4], [1, 1, 1, 0]], score: 0}, Some((3, 3)));
         t(State{board:[[1; 4]; 4], score: 0}, None);
     }
 
     #[test]
     fn test_state_display() {
-        assert_eq!(format!("{}", new_board()), "       0       0       0       0
+        assert_eq!(format!("{}", new_state()), "       0       0       0       0
        0       0       0       0
        0       0       0       0
        0       0       0       0")
@@ -183,7 +183,7 @@ mod tests {
     
     #[test]
     fn test_add_piece() {
-        let b = add_piece(&new_board(), &low_pos, &new_val_2);
+        let b = add_piece(&new_state(), &low_pos, &new_val_2);
         assert_eq!(b, Some(State{board:[[2, 0, 0, 0], [0; 4], [0; 4], [0; 4]], score: 0}));
     }
 
@@ -194,28 +194,28 @@ mod tests {
             assert_eq!(b, result);
         }
 
-        t(Direction::Left, new_board(), None);
+        t(Direction::Left, new_state(), None);
         t(Direction::Left, State{board: [[1, 0, 0, 0]; 4], score: 0}, None);
         t(Direction::Left, State{board: [[1, 2, 3, 4]; 4], score: 0}, None);
         t(Direction::Left, State{board: [[0, 0, 0, 1]; 4], score: 0}, Some(State{board: [[1, 0, 0, 0]; 4], score: 0}));
         t(Direction::Left, State{board: [[1, 0, 0, 1]; 4], score: 0}, Some(State{board: [[2, 0, 0, 0]; 4], score: 8}));
         t(Direction::Left, State{board: [[1, 1, 2, 2]; 4], score: 0}, Some(State{board: [[2, 4, 0, 0]; 4], score: 24}));
 
-        t(Direction::Right, new_board(), None);
+        t(Direction::Right, new_state(), None);
         t(Direction::Right, State{board: [[0, 0, 0, 1]; 4], score: 0}, None);
         t(Direction::Right, State{board: [[1, 2, 3, 4]; 4], score: 0}, None);
         t(Direction::Right, State{board: [[1, 0, 0, 0]; 4], score: 0}, Some(State{board: [[0, 0, 0, 1]; 4], score: 0}));
         t(Direction::Right, State{board: [[1, 0, 0, 1]; 4], score: 0}, Some(State{board: [[0, 0, 0, 2]; 4], score: 8}));
         t(Direction::Right, State{board: [[1, 1, 2, 2]; 4], score: 0}, Some(State{board: [[0, 0, 2, 4]; 4], score: 24}));
 
-        t(Direction::Up, new_board(), None);
+        t(Direction::Up, new_state(), None);
         t(Direction::Up, State{board: [[1; 4], [0; 4], [0; 4], [0; 4]], score: 0}, None);
         t(Direction::Up, State{board: [[1; 4], [2; 4], [3; 4], [4; 4]], score: 0}, None);
         t(Direction::Up, State{board: [[0; 4], [0; 4], [0; 4], [1; 4]], score: 0}, Some(State{board: [[1; 4], [0; 4], [0; 4], [0; 4]], score: 0}));
         t(Direction::Up, State{board: [[1; 4], [0; 4], [0; 4], [1; 4]], score: 0}, Some(State{board: [[2; 4], [0; 4], [0; 4], [0; 4]], score: 8}));
         t(Direction::Up, State{board: [[1; 4], [1; 4], [2; 4], [2; 4]], score: 0}, Some(State{board: [[2; 4], [4; 4], [0; 4], [0; 4]], score: 24}));
 
-        t(Direction::Down, new_board(), None);
+        t(Direction::Down, new_state(), None);
         t(Direction::Down, State{board: [[0; 4], [0; 4], [0; 4], [1; 4]], score: 0}, None);
         t(Direction::Down, State{board: [[1; 4], [2; 4], [3; 4], [4; 4]], score: 0}, None);
         t(Direction::Down, State{board: [[1; 4], [0; 4], [0; 4], [0; 4]], score: 0}, Some(State{board: [[0; 4], [0; 4], [0; 4], [1; 4]], score: 0}));
