@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::fmt;
 
 enum Direction { Up, Down, Left, Right }
 
@@ -7,6 +7,16 @@ struct State { board: [[u32; 4]; 4], score: u32 }
 
 impl PartialEq for State {
     fn eq(&self, other: &State) -> bool { self.board == other.board && self.score == other.score }
+}
+
+impl fmt::Display for State {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:8}{:8}{:8}{:8}\n{:8}{:8}{:8}{:8}\n{:8}{:8}{:8}{:8}\n{:8}{:8}{:8}{:8}",
+               self.board[0][0], self.board[0][1], self.board[0][2], self.board[0][3],
+               self.board[1][0], self.board[1][1], self.board[1][2], self.board[1][3],
+               self.board[2][0], self.board[2][1], self.board[2][2], self.board[2][3],
+               self.board[3][0], self.board[3][1], self.board[3][2], self.board[3][3])
+    }
 }
 
 fn clone_state(b: &State) -> State {
@@ -147,7 +157,7 @@ fn low_pos(b: &State) -> Option<(usize, usize)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_new_board() {
         let b = new_board();
@@ -163,6 +173,14 @@ mod tests {
         t(State{board:[[1; 4]; 4], score: 0}, None);
     }
 
+    #[test]
+    fn test_state_display() {
+        assert_eq!(format!("{}", new_board()), "       0       0       0       0
+       0       0       0       0
+       0       0       0       0
+       0       0       0       0")
+    }
+    
     #[test]
     fn test_add_piece() {
         let b = add_piece(&new_board(), &low_pos, &new_val_2);
